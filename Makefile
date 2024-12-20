@@ -1,5 +1,8 @@
-gendiff:
-	node bin/gendiff.js
+serve:
+	npx webpack serve --mode development
+
+build:
+	npx webpack --mode production
 
 lint:
 	npx eslint .
