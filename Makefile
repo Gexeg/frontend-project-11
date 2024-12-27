@@ -5,7 +5,10 @@ build:
 	npx webpack --mode production
 
 lint:
-	npx eslint .
+	npx eslint ./src
+
+lint_fix:
+	npx eslint ./src --fix
 
 test:
 	npm test
