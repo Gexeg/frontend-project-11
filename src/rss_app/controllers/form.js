@@ -18,7 +18,7 @@ function checkRssBody(body) {
     // if (!body.includes(expectedContent)) {
     //   throw new Error(translator.t('error.wrongContent'));
     // }
-    return true;
+    return 'success';
   }
   
 function validateUrlResponse(url) {
@@ -40,9 +40,9 @@ const urlSchema = yup
       }
     );
 
-export function subscribeToNewRss(url, state, translator) {
+export function subscribeToNewRss(url, state) {
     urlSchema
-    .validate(url, { context: { translator } })
+    .validate(url)
     .then((comment) => {
         state['rssForm'] = {
             'url': null,
@@ -53,7 +53,7 @@ export function subscribeToNewRss(url, state, translator) {
     .catch((error) => {
         state['rssForm'] = {
             'url': url,
-            'error': translator.t(error.message, error.options ?? {}),
+            'error': {code: error.message, options: error.options ?? {}},
             'comment': null
         }
     });
