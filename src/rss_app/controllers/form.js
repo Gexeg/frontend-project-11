@@ -2,57 +2,84 @@ import * as yup from 'yup';
 import { rssFormStates } from '../const.js';
 
 
-function getRss(url) {
-    return fetch(url)
-      .then((response) => {
-        if (!response.ok) {
-          // тут конечно по хорошему надо кастомные ошибки сделать, чтобы не магичить
-          const error = new Error('error.urlUnavailable');
-          error.options = {status: response.status}
-          throw error;
-        }
-        return response.text();
-      });
-  }
-  
-function checkRssBody(body) {
-  // TODO проверить, что пришедший контент - rss
-    // if (!body.includes(expectedContent)) {
-    //   throw new Error(translator.t('error.wrongContent'));
-    // }
-    return 'success';
-  }
-  
-function validateUrlResponse(url) {
-    return getRss(url)
-      .then((body) => checkRssBody(body))
-      .catch((error) => {
-        throw new Error(error.message);
-      });
-  }
-  
 const urlSchema = yup
     .string()
     .url('error.invalidUrl')
-    .test(
-      function (value) {
-        return validateUrlResponse(value)
-          .then((comment) => comment)
-          .catch((error) => this.createError({ message: error.message }));
+
+
+function getRss(url) {
+    // это конечно надо в конфиг
+    // но и так сойдет. Расширяемости то не предусматриваем
+    const wrappedUrl = `https://allorigins.hexlet.app/get?url=${encodeURIComponent(url)}`
+
+    return fetch(wrappedUrl)
+    .then((response) => {
+      if (!response.ok) {
+        // тут конечно надо кастомные ошибки сделать, чтобы не магичить c атрибутами
+        const error = new Error('error.urlUnavailable');
+        error.options = {status: response.status}
+        throw error;
       }
-    );
+      return response.json();
+    });
+  }
+
+function parseRss(someXml) {
+  const parser = new DOMParser();
+  const xmlDoc = parser.parseFromString(someXml, 'application/xml');
+
+  if (xmlDoc.querySelector('parsererror')) {
+    throw new Error('error.wrongContent');
+  };
+
+  const feedTitle = xmlDoc.querySelector('title')?.textContent;
+  const feedDescription = xmlDoc.querySelector('description').textContent;
+  const newFeed = {
+    'title': feedTitle,
+    'description': feedDescription,
+  };
+
+  const postsItems = xmlDoc.querySelectorAll('item')
+  const posts = Array.from(postsItems).reduce((acc, item) => {
+    const newPost = {
+      link: item.querySelector('link').textContent,
+      title: item.querySelector('title').textContent,
+      feed: feedTitle
+    };
+    acc.push(newPost);
+    return acc
+  }, [])
+
+  console.log(newFeed);
+
+  return [newFeed, posts]
+
+}
+
+function updateState(state, feed, posts) {
+  if (state.feeds.some((el) => el.title === feed.title)) {
+    throw new Error('error.alreadySaved');
+  }
+  state.feeds.push(feed);
+  state.posts.push(...posts)
+}
 
 export function subscribeToNewRss(url, state) {
     urlSchema
     .validate(url)
-    .then((comment) => {
+    .then(() => getRss(url))
+    .then((responseJson) => parseRss(responseJson.contents))
+    .then(([feeds, posts]) => updateState(state, feeds, posts))
+    .then(() => {
         state['rssForm'] = {
             'state': rssFormStates.success,
             'url': null,
-            'feedback': {code: comment, options: {}},
+            'feedback': {code: rssFormStates.success, options: {}},
         }
     })
     .catch((error) => {
+        console.log('Got some error');
+        console.log(error.message);
         state['rssForm'] = {
             'state': rssFormStates.fail,
             'url': url,

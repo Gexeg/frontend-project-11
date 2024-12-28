@@ -13,6 +13,8 @@ const state = {
         'url': null,
         'feedback': null,
     },
+    'posts': [],
+    'feeds': []
 }
 
 

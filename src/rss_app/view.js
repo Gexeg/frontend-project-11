@@ -30,6 +30,8 @@ export const setWatcher = (state, translator) => {
         switch (path) {
             case 'rssForm':
                 console.log('Render rss form')
+                console.log(JSON.stringify(state, null, 2));
+
                 renderRssForm(state, translator)
                 break
             default:
