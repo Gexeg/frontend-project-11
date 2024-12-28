@@ -12,6 +12,6 @@ function setSubmitFormHandler(state, translator) {
 }
 
 export default async function application(state, translator) {
-    const watchedState = setWatcher(state);
+    const watchedState = setWatcher(state, translator);
     setSubmitFormHandler(watchedState, translator);
 }
