@@ -3,15 +3,15 @@ import 'bootstrap';
 
 import i18n from 'i18next';
 import app from './rss_app/app.js'
-import { supportedLanguages } from './const.js'
+import { supportedLanguages, rssFormStates } from './rss_app/const.js'
 import resources from './locales/index.js';
 
 const state = {
-    'lang': supportedLanguages.en,
+    'lang': supportedLanguages.ru,
     'rssForm': {
+        'state': rssFormStates.init,
         'url': null,
-        'error': null,
-        'comment': null
+        'feedback': null,
     },
 }
 

@@ -1,4 +1,6 @@
 import onChange from 'on-change';
+import { rssFormStates } from './const.js';
+
 
 function renderRssForm(state, translator) {
     const formState = state.rssForm
@@ -7,18 +9,18 @@ function renderRssForm(state, translator) {
     resultString.classList.remove('text-danger');
     resultString.classList.remove('text-success');
 
+    const input = document.querySelector('#url-input');
+    console.log(formState.url)
+    input.value = formState.url;
+    input.focus();
 
-    console.log(state)
-    if (formState.comment) {
-        console.log('State comment')
-        resultString = (translator.t(formState.comment));
+    if (formState.state === rssFormStates.success) {
         resultString.classList.add('text-success');
-        resultString.textContent = translator.t(formState.comment)
+        resultString.textContent = translator.t(formState.feedback.code, formState.feedback.options);
     }
-    else if (formState.error) {
-        console.log('State error')
+    else if (formState.state === rssFormStates.fail) {
         resultString.classList.add('text-danger');
-        resultString.textContent = translator.t(formState.error.code, formState.error.options);
+        resultString.textContent = translator.t(formState.feedback.code, formState.feedback.options);
     }
 }
 

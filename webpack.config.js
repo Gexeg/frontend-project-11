@@ -25,6 +25,14 @@ export default {
       },
     ],
   },
+  entry: './src/index.js',
+  devServer: {
+    static: './dist', // Статические файлы
+    hot: true,        // Горячая перезагрузка модулей
+    port: 8080,       // Фиксированный порт
+    open: true,       // Автоматически открывать браузер
+    liveReload: true, // Перезагрузка страницы
+  },
   plugins: [
     new HtmlWebpackPlugin({
       template: './src/index.html',

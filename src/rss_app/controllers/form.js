@@ -1,4 +1,6 @@
 import * as yup from 'yup';
+import { rssFormStates } from '../const.js';
+
 
 function getRss(url) {
     return fetch(url)
@@ -45,16 +47,16 @@ export function subscribeToNewRss(url, state) {
     .validate(url)
     .then((comment) => {
         state['rssForm'] = {
+            'state': rssFormStates.success,
             'url': null,
-            'error': null,
-            'comment': comment
+            'feedback': {code: comment, options: {}},
         }
     })
     .catch((error) => {
         state['rssForm'] = {
+            'state': rssFormStates.fail,
             'url': url,
-            'error': {code: error.message, options: error.options ?? {}},
-            'comment': null
+            'feedback': {code: error.message, options: error.options ?? {}},
         }
     });
 }
