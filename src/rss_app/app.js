@@ -1,5 +1,5 @@
 import { setWatcher } from "./view.js";
-import { subscribeToNewRss } from "./controllers/form.js";
+import { subscribeToNewRss } from "./controllers/add_rss.js";
 
 function setSubmitFormHandler(state, translator) {
     const button = document.querySelector('#rss-url-submit');

@@ -6,7 +6,10 @@ export default {
         wrongContent: 'Ответ не соответствует ожидаемому содержимому',
         alreadySaved: 'Rss уже сохранен'
       },
-      success: 'RSS успешно загружен'
+      success: 'RSS успешно загружен',
+      posts: 'Посты',
+      feeds: 'Фиды',
+      rssPostButton: 'Просмотр'
     },
   };
   

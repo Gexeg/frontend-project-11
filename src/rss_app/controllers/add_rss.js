@@ -2,6 +2,28 @@ import * as yup from 'yup';
 import { rssFormStates } from '../const.js';
 
 
+export function subscribeToNewRss(url, state) {
+  urlSchema
+  .validate(url)
+  .then(() => getRss(url))
+  .then((responseJson) => parseRss(responseJson.contents))
+  .then(([feeds, posts]) => addPostsFeeds(state, feeds, posts))
+  .then(() => {
+      state['rssForm'] = {
+          'state': rssFormStates.success,
+          'url': null,
+          'feedback': {code: rssFormStates.success, options: {}},
+      }
+  })
+  .catch((error) => {
+      state['rssForm'] = {
+          'state': rssFormStates.fail,
+          'url': url,
+          'feedback': {code: error.message, options: error.options ?? {}},
+      }
+  });
+}
+
 const urlSchema = yup
     .string()
     .url('error.invalidUrl')
@@ -50,40 +72,14 @@ function parseRss(someXml) {
     return acc
   }, [])
 
-  console.log(newFeed);
-
   return [newFeed, posts]
 
 }
 
-function updateState(state, feed, posts) {
+function addPostsFeeds(state, feed, posts) {
   if (state.feeds.some((el) => el.title === feed.title)) {
     throw new Error('error.alreadySaved');
   }
   state.feeds.push(feed);
   state.posts.push(...posts)
-}
-
-export function subscribeToNewRss(url, state) {
-    urlSchema
-    .validate(url)
-    .then(() => getRss(url))
-    .then((responseJson) => parseRss(responseJson.contents))
-    .then(([feeds, posts]) => updateState(state, feeds, posts))
-    .then(() => {
-        state['rssForm'] = {
-            'state': rssFormStates.success,
-            'url': null,
-            'feedback': {code: rssFormStates.success, options: {}},
-        }
-    })
-    .catch((error) => {
-        console.log('Got some error');
-        console.log(error.message);
-        state['rssForm'] = {
-            'state': rssFormStates.fail,
-            'url': url,
-            'feedback': {code: error.message, options: error.options ?? {}},
-        }
-    });
 }

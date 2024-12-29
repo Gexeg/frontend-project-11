@@ -6,7 +6,10 @@ export default {
         wrongContent: 'Wrong content. Probably it\'s not a RSS feed.',
         alreadySaved: 'Rss already saved'
       },
-      success: 'RSS downloaded'
+      success: 'RSS downloaded',
+      posts: 'Posts',
+      feeds: 'Feeds',
+      rssPostButton: 'View'
     },
   };
   
