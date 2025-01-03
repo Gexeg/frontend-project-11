@@ -1,5 +1,6 @@
-import { setWatcher } from "./view.js";
+import { setWatcher } from "./view/index.js";
 import { subscribeToNewRss } from "./controllers/add_rss.js";
+import startPeriodicTasks from './periodic_tasks/index.js'
 
 function setSubmitFormHandler(state, translator) {
     const button = document.querySelector('#rss-url-submit');
@@ -13,5 +14,6 @@ function setSubmitFormHandler(state, translator) {
 
 export default async function application(state, translator) {
     const watchedState = setWatcher(state, translator);
+    startPeriodicTasks(watchedState);
     setSubmitFormHandler(watchedState, translator);
 }

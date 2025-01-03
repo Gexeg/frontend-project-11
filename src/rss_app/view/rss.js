@@ -1,27 +1,7 @@
-import onChange from 'on-change';
-import { rssFormStates } from './const.js';
 
+import { rssFormStates } from '../const.js';
 
-export const setWatcher = (state, translator) => {
-    return onChange(state, function (path, value, previousValue, applyData) {
-        switch (path) {
-            case 'rssForm':
-                renderRssForm(state, translator)
-                break
-            case 'feeds':
-                renderFeedsList(state, translator)
-                break
-            case 'posts':
-                renderPostsList(state, translator)
-                break
-            default:
-                console.log('I"m in default branch')
-                break
-        }
-    })
-}
-
-function renderRssForm(state, translator) {
+export function renderRssForm(state, translator) {
     const formState = state.rssForm
     const resultString = document.querySelector('#url-feedback');
     resultString.textContent = '';
@@ -42,7 +22,7 @@ function renderRssForm(state, translator) {
     }
 }
 
-function renderFeedsList(state, translator) {
+export function renderFeedsList(state, translator) {
     const feedsContainer = document.querySelector('.feeds');
 
     const newChildren = []
@@ -56,7 +36,7 @@ function renderFeedsList(state, translator) {
 
 }
 
-function renderPostsList(state, translator) {
+export function renderPostsList(state, translator) {
     const postsContainer = document.querySelector('.posts');
 
     const newChildren = []
