@@ -1,5 +1,5 @@
 import * as yup from 'yup';
-import { rssFormStates } from '../const.js';
+import { rssFormStates, postStates } from '../const.js';
 import { getRss, parseRss } from '../rss_utils.js'
 
 
@@ -17,7 +17,16 @@ export function subscribeToNewRss(url, state) {
       'description': feed.description,
       'link': url
     });
-    state.posts.push(...posts)
+    posts.forEach(parsedData => {
+      state.posts.push({
+        link: parsedData.link,
+        title: parsedData.title,
+        description: parsedData.description,
+        feed: feed.title,
+        state: postStates.new
+      })
+    })
+    
   })
   .then(() => {
       state['rssForm'] = {

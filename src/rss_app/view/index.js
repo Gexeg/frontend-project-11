@@ -20,3 +20,23 @@ export const setWatcher = (state, translator) => {
         }
     })
 }
+
+export function addBlankModalElement(translator) {
+    const modalHTML = `<div class="modal" tabindex="-1">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+      </div>
+      <div class="modal-body">
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">${translator.t('modal.close')}</button>
+        <button type="button" class="btn btn-primary">${translator.t('modal.open')}</button>
+      </div>
+    </div>
+  </div>
+</div>`;
+    document.body.insertAdjacentHTML('beforeend', modalHTML);
+}

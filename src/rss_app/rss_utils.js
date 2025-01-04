@@ -37,7 +37,6 @@ export function parseRss(someXml) {
       link: item.querySelector('link').textContent,
       title: item.querySelector('title').textContent,
       description: item.querySelector('description')?.textContent || 'error.descriptionNotFOund',
-      feed: feedTitle
     };
     acc.push(newPost);
     return acc
